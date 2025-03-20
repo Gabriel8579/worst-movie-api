@@ -5,8 +5,7 @@ API para processar e analisar premiações do Golden Raspberry Awards, identific
 ## 📌 Tecnologias Utilizadas
 - **NestJS** - Framework para Node.js
 - **TypeORM** - ORM para interação com banco de dados
-- **SQLite** - Banco de dados utilizado nos testes
-- **PostgreSQL** - Banco de dados para produção
+- **SQLite** - Banco de dados utilizado
 - **FastCSV** - Leitura e processamento de CSV com streams
 - **Workers & Batch Processing** - Para melhor performance no carregamento de dados
 - **Caching** - Implementado para otimizar consultas frequentes
