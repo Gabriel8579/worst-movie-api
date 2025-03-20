@@ -27,7 +27,7 @@ Este projeto foi desenvolvido utilizando **Arquitetura Hexagonal**, garantindo u
 npm install
 ```
 
-### 3️⃣ Configurar variáveis de ambiente:
+### 3️⃣ Configurar variáveis de ambiente e dados:
 Crie um arquivo `.env` na raiz do projeto e configure suas variáveis conforme o exemplo abaixo:
 ```sh
 PORT= 3000 # Porta em que o servidor irá executar
@@ -40,6 +40,18 @@ WORKERS_POOL_SIZE=24 # Número de workers que serão criados para processar os d
 
 SQL_BATCH_SIZE=900 # Número de linhas que serão inseridas no banco de dados por vez, não exceder 900 por limitação do SQLite
 ```
+Importe também um arquivo na pasta `data` com o nome `movielist.csv` contendo os dados a serem processados. O formato do CSV deve ser o seguinte:
+```csv
+year;title;studios;producers;winner
+2000;Movie A;Studio X;Producer X and Producer A;yes
+2005;Movie B;Studio X;Producer X, Producer A and Producer B;yes
+```
+O delitador do CSV deve ser `;` e o arquivo deve conter os seguintes campos:
+- `year`: Ano do filme
+- `title`: Título do filme
+- `studios`: Estúdios envolvidos na produção (separados por vírgula e and)
+- `producers`: Produtores envolvidos na produção (separados por vírgula e and)
+- `winner`: Indica se o filme ganhou o prêmio (yes ou (espaço em branco))
 
 ### 4️⃣ Rodar a aplicação em modo desenvolvimento:
 ```sh
@@ -60,6 +72,13 @@ Para rodar os testes E2E:
 npm run test:e2e
 ```
 
+### 7️⃣ Gerar um CSV fictício
+É possível gerar um arquivo CSV fictício executando o seguinte comando:
+```sh
+npm run gen:csv
+```
+Os parâmetros dessa geração podem ser ajustados no arquivo `src/utils/generate-large-csv.ts`.
+
 ## 📌 Endpoints
 
 - `GET /producers/awards/intervals` → Retorna os produtores com maior e menor intervalo entre prêmios.
@@ -69,9 +88,10 @@ npm run test:e2e
 ```
 worst-movie-api/
 │-- src/
-│   │-- application/  # Casos de uso, services e factories
-│   │-- domain/       # Entidades e interfaces
+│   │-- application/     # Casos de uso, services e factories
+│   │-- domain/          # Entidades e interfaces
 │   │-- infrastructure/  # Configurações, drivers e controllers
+|   │-- utils/           # Funções utilitárias
 │   └── main.ts
 │-- test/  # Testes automatizados
 │-- .env.example  # Exemplo de variáveis de ambiente
@@ -81,4 +101,3 @@ worst-movie-api/
 
 ---
 💡 *Projeto desenvolvido com foco em modularidade, performance e escalabilidade!* 🚀
-

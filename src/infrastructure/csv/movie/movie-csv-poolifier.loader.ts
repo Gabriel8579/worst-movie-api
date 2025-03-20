@@ -35,9 +35,7 @@ export class MovieCsvPoolifierLoader extends MovieCsvReader {
   }
 
   async read(filePath: string): Promise<void> {
-    if (!filePath) {
-      throw new Error('File path is required');
-    }
+    if (!filePath) throw new Error('File path is required');
 
     const realPath = path.resolve(__dirname, '../../../../', filePath);
 
@@ -56,21 +54,23 @@ export class MovieCsvPoolifierLoader extends MovieCsvReader {
     const batch: string[] = [];
     const promises: Promise<void>[] = [];
 
-    let lineNumber = 0;
+    let header: string | null = null;
     for await (const line of rlInterface) {
-      if (lineNumber === 0) {
-        lineNumber++;
-        continue; // Skip header line
+      if (!header) {
+        header = line;
+        continue;
       }
+
       batch.push(line);
+
       if (batch.length >= batchSize) {
-        promises.push(this.sendToPool(batch));
+        promises.push(this.sendToPool([header, ...batch]));
         batch.length = 0;
       }
     }
 
     if (batch.length > 0) {
-      promises.push(this.sendToPool(batch));
+      promises.push(this.sendToPool([header as string, ...batch]));
     }
 
     await Promise.allSettled(promises);

@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { ThreadWorker } from 'poolifier';
 import { Movie } from 'src/domain/entities/movie/movie.entity';
 import { splitNames } from 'src/utils/splitName';
@@ -6,18 +5,31 @@ import { splitNames } from 'src/utils/splitName';
 export default new ThreadWorker(parseMovieCsvWorker);
 
 function parseMovieCsvWorker(batch: string[]): Partial<Movie>[] {
-  const id = randomUUID();
-  console.log(`Worker ${id} started with ${batch.length} lines`);
-  const parsed = batch.map((line) => {
-    const [year, title, studios, producers, winner] = line.split(';');
+  if (!batch.length) return [];
+
+  const header = batch
+    .shift()
+    ?.split(';')
+    .map((col) => col.trim().toLowerCase());
+
+  if (!header) {
+    throw new Error('CSV mal formatado: Cabeçalho ausente');
+  }
+
+  return batch.map((line) => {
+    const values = line.split(';');
+
+    const movieData: Record<string, string> = {};
+    header.forEach((col, index) => {
+      movieData[col] = values[index]?.trim() || '';
+    });
+
     return {
-      year: parseInt(year, 10),
-      title,
-      studios: splitNames(studios),
-      producers: splitNames(producers),
-      winner: winner.toLowerCase() === 'yes',
+      year: parseInt(movieData['year'], 10),
+      title: movieData['title'],
+      studios: splitNames(movieData['studios']),
+      producers: splitNames(movieData['producers']),
+      winner: movieData['winner'].toLowerCase() === 'yes',
     };
   });
-  console.log(`Worker ${id} finished processing`);
-  return parsed;
 }
