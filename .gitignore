@@ -5,6 +5,7 @@
 
 data/*
 !/data/.gitkeep
+!/data/movielist.csv
 
 # Logs
 logs

@@ -27,7 +27,7 @@ npm install
 ```
 
 ### 3️⃣ Configurar variáveis de ambiente e dados:
-Crie um arquivo `.env` na raiz do projeto e configure suas variáveis conforme o exemplo abaixo:
+Crie um arquivo `.env` a partir do arquivo `.env.example` na raiz do projeto e configure suas variáveis conforme o exemplo abaixo:
 ```sh
 PORT= 3000 # Porta em que o servidor irá executar
 
